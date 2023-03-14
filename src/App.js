@@ -1,48 +1,31 @@
-import { useState } from "react";
+import React from "react";
+import "./App.css";
+
 
 export default function App() {
-  const [giftCard, setGiftCard] = useState(
-    {
-        firstName: "Jennifer",
-        lastName: "Smith",
-        text: "Free dinner for 4 guests",
-        valid: true,
-        instructions: "To use your coupon, click the button below.",
-    }
-  );
+  const [toggle,setToggle] = React.useState(false);
 
-  function spendGiftCard() {
-    setGiftCard(prevState => {
-        return {
-          ...prevState,
-          text: "Your coupon has been used.",
-          valid: false,
-          instructions: "Please visit our restaurant to renew your gift card.",
-        }
-    });
+  const clickHandler = ()=>{
+    setToggle(!toggle);
   }
+  // just one time invoke
+  // React.useEffect(()=>{
+  //   document.title = toggle ? "welcome to Little Lemon" : "using Side Effect" 
+  // },[]);
+  // evrey time toggle change 
+  React.useEffect(()=>{
+    document.title = toggle ? "welcome to Little Lemon" : "using Side Effect" 
+  },[toggle]);
+
+  // React.useEffect(()=>{
+  //   document.title = toggle ? "welcome to Little Lemon" : "using Side Effect" 
+  // });
 
   return (
-    <div style={{padding: '40px'}}>
-      <h1>
-        Gift Card Page
-      </h1>
-      <h2>
-        Customer: {giftCard.firstName} {giftCard.lastName}
-      </h2>
-      <h3>
-        {giftCard.text}
-      </h3>
-      <p>
-        {giftCard.instructions}
-      </p>
-      {
-        giftCard.valid && (
-          <button onClick={spendGiftCard}>
-            Spend Gift Card
-          </button>
-        )
-      }
+    <div>
+      <h1> using the useEffect hook</h1>
+      <button onClick={clickHandler}>Toggle Message</button>
+      {toggle && <h2>welcome to Little Lemon</h2>}
     </div>
-  );
+  )
 }
