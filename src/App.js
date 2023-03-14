@@ -1,99 +1,55 @@
 import "./App.css";
-import { ThemeProvider, useTheme } from "./ThemeContext";
-import Switch from "./Switch";
-import { UserProvider, useUser } from "./UserContext";
+import React from "react";
 
+function GoalFoarm(props){
+  const [formData,setFormData] = React.useState({goal :"",by :""});
+  
+  function changeHandler(e){
+    setFormData({...formData,[e.target.name]:e.target.value});
+  } 
 
-const LoggedInUser = () => {
-  const user = useUser();
+  function submitHandler(e){
+    e.preventDefault();
+    props.onAdd(formData);
+    setFormData({goal : "" ,by :""});
+  }
+
   return (
-    <p>Hello <span className="Username">{user.email}</span></p>
+    <>
+    <h1>my Goals :</h1>
+    <form onSubmit={submitHandler}>
+      <input type="text" name="goal" placeholder="Goal" value={formData.goal} onChange={changeHandler} />
+      <input type={"text"} name="by" placeholder="By .." value={formData.by} onChange={changeHandler} />
+      <button>submit Goal</button>
+    </form>
+    </>
+  );
+}
+
+function ListOfGoals(props){
+  return (
+    <ul>
+      {props.allGoals.map((g)=>(
+        <li key={g.goal}> 
+        <span>My goal is to {g.goal} by {g.by}</span>
+        </li>
+      ))}
+    </ul>
   )
 }
 
-const Title = ({ children }) => {
-  const { theme } = useTheme();
-  return (
-    <h2
-      style={{
-        color: theme === "light" ? "black" : "white",
-      }}
-    >
-      {children}
-    </h2>
-  );
-};
-
-const Paragraph = ({ children }) => {
-  const { theme } = useTheme();
-  return (<div>
-    <p
-      style={{
-        color: theme === "light" ? "black" : "white",
-      }}
-    >
-      {children}
-    </p>
-  </div>
-  );
-};
-
-const Content = () => {
-  const user = useUser();
-  return (
-    <div>
-      <Paragraph>
-        We are a pizza loving family. And for years, I searched and searched and
-        searched for the perfect pizza dough recipe. I tried dozens, or more.
-        And while some were good, none of them were that recipe that would
-        make me stop trying all of the others.
-        <p>Written by {user.name}</p>
-      </Paragraph>
-    </div>
-  );
-};
-
-const Header = () => {
-  return (
-    <header>
-      <Switch />
-      <Title>Little Lemon 🍕</Title>
-      <LoggedInUser/>
-      
-    </header>
-  );
-};
-
-const Page = () => {
-  return (
-    <div className="Page">
-      <Title>When it comes to dough</Title>
-      <Content />
-    </div>
-  );
-};
-
 function App() {
-  const { theme } = useTheme();
+  const [allGoals,updateAllGoals] = React.useState([{goal :"first",by :"anymo"}]);
+
+  function addGoal(goal){updateAllGoals([...allGoals,goal]);}
+
   return (
-    <div
-      className="App"
-      style={{
-        backgroundColor: theme === "light" ? "white" : "black",
-      }}
-    >
-      <Header />
-      <Page />
+    <div className="App">
+      <GoalFoarm onAdd={addGoal} />
+      <ListOfGoals allGoals={allGoals} />
     </div>
   );
 }
 
-function Root() {
-  return (
-      <ThemeProvider>
-        <UserProvider><App /></UserProvider>
-      </ThemeProvider>
-  );
-}
 
-export default Root;
+export default App;
