@@ -48,3 +48,13 @@ button {
   font-weight: bold;
   cursor: pointer;
 }
+
+.Row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.Row > * {
+  margin-left: 32px;
+}

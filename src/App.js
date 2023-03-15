@@ -1,33 +1,43 @@
 import "./App.css";
 
-const Button = ({ children, backgroundColor }) => {
-  return <button style={{ backgroundColor }}>{children}</button>
-}
+import * as React from "react";
 
-const Alert = ({ children }) => {
+const Row = ({ children, spacing }) => {
+  const childStyle = {
+    marginLeft: `${spacing}px`,
+  };
   return (
-    <>
-      <div className="Overlay" />
-      <div className="Alert">{children}</div>
-    </>
+    <div className="Row">
+      {React.Children.map(children, (child, index) => {
+        return React.cloneElement(child, {
+          style: {
+            ...child.props.style,
+            ...(index > 0 ? childStyle : {}),
+          },
+        });
+      })}
+    </div>
   );
 };
 
-const DeleteButton = () => {
-  return <Button backgroundColor="red" >Delete</Button>
+function LiveOrders() {
+  return (
+    <div>
+      <Row spacing={32} >
+        <>pizza margrita</>
+        <>2</>
+        <>30$</>
+        <>18:30</>
+        <>John</>
+      </Row>
+    </div>
+  )
 }
 
 function App() {
   return (
-    <div className="App" >
-      <header>Little Lemon Resturant</header>
-      <Alert>
-        <h4>Delete Account</h4>
-        <p>
-          Are you sure you want to proceed ?
-        </p>
-        <DeleteButton/>
-      </Alert>
+    <div className="App">
+      <LiveOrders />
     </div>
   )
 }
