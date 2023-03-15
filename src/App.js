@@ -1,21 +1,40 @@
 import "./App.css";
-import { RadioGroup, RadioOption } from "./Radio";
-import { useState } from "react";
 
-function App() {
-  const [selected, setSelected] = useState("");
+const Button = ({ type, children, ...buttonProps }) => {
+  const className = type === "primary" ? "PrimaryButton" : "SecondaryButton";
   return (
-    <div className="App">
-      <h2>How did you hear about Little Lemon?</h2>
-      <RadioGroup onChange={setSelected} selected={selected}>
-        <RadioOption value="social_media">Social Media</RadioOption>
-        <RadioOption value="friends">Friends</RadioOption>
-        <RadioOption value="advertising">Advertising</RadioOption>
-        <RadioOption value="other">Other</RadioOption>
-      </RadioGroup>
-      <button disabled={!selected}>Submit</button>
-    </div>
+    <button className={`Button ${className}`} {...buttonProps}>
+      {children}
+    </button>
   );
+};
+
+const LoginButton =({type , children ,...buttonProps}) => {
+  return(
+    <Button type="secondary" {...buttonProps} onClick={()=>{alert("Logging in !")}}>
+      {children}
+    </Button>
+  )
 }
 
+const LoginButton2 =({type , children ,...buttonProps}) => {
+  return(
+    <Button type="secondary" onClick={()=>{alert("Logging in !")}} {...buttonProps} >
+      {children}
+    </Button>
+  )
+}
+
+function App (){
+  return (
+    <div className="App" >
+      <header className="Header">Little Lemon</header>
+      <Button type="primary" onClick={()=>{alert("Signing up !")}} > sign up</Button>
+      {/* try the over ride which one will done */}
+      <LoginButton type="secondary" onClick={()=>{alert("Signing up !")}}>Log in "overwrite not allowed"</LoginButton>
+      <LoginButton2 type="secondary" onClick={()=>{alert("Signing up !")}}>Log in "overwrite will done"</LoginButton2>
+      
+    </div>
+  )
+}
 export default App;
