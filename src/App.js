@@ -1,40 +1,72 @@
 import "./App.css";
+import { useState, useEffect } from 'react';
 
-const Button = ({ type, children, ...buttonProps }) => {
-  const className = type === "primary" ? "PrimaryButton" : "SecondaryButton";
-  return (
-    <button className={`Button ${className}`} {...buttonProps}>
-      {children}
-    </button>
-  );
-};
+const withMousePosition = (WrappedComponent) => {
+  return (props) => {
+    const [mousePosition, setMousePosition] = useState({
+      x: 0,
+      y: 0,
+    })
 
-const LoginButton =({type , children ,...buttonProps}) => {
-  return(
-    <Button type="secondary" {...buttonProps} onClick={()=>{alert("Logging in !")}}>
-      {children}
-    </Button>
-  )
+    useEffect(() => {
+      const handleMousePositionChange = (e) => {
+        setMousePosition({
+          x: e.clientX,
+          y: e.clientY,
+        });
+      };
+      window.addEventListener("mousemove", handleMousePositionChange);
+
+      return () => {
+        window.removeEventListener("mousemove", handleMousePositionChange);
+      };
+    }, []);
+
+    return (
+      <WrappedComponent {...props} mousePosition={mousePosition} />
+    )
+  }
 }
 
-const LoginButton2 =({type , children ,...buttonProps}) => {
-  return(
-    <Button type="secondary" onClick={()=>{alert("Logging in !")}} {...buttonProps} >
-      {children}
-    </Button>
-  )
-}
+const PanelMouseLogger = ({ mousePosition }) => {
+  if (!mousePosition) {
+    return null;
+  }
 
-function App (){
   return (
-    <div className="App" >
-      <header className="Header">Little Lemon</header>
-      <Button type="primary" onClick={()=>{alert("Signing up !")}} > sign up</Button>
-      {/* try the over ride which one will done */}
-      <LoginButton type="secondary" onClick={()=>{alert("Signing up !")}}>Log in "overwrite not allowed"</LoginButton>
-      <LoginButton2 type="secondary" onClick={()=>{alert("Signing up !")}}>Log in "overwrite will done"</LoginButton2>
-      
+    <div className="BasicTracker">
+      <p>Mouse Position :</p>
+      <div className="Row">
+        <span>x :{mousePosition.x}</span>
+        <span>y :{mousePosition.y}</span>
+      </div>
     </div>
   )
+}
+
+const PointMouseLogger = ({ mousePosition }) => {
+  if (!mousePosition) {
+    return null;
+  }
+  return (
+    <p>
+      ({mousePosition.x} , {mousePosition.y})
+    </p>
+  )
+
+}
+
+const PanelMouseTracker = withMousePosition(PanelMouseLogger);
+const PointMouseTracker = withMousePosition(PointMouseLogger);
+
+function App() {
+  return (
+    <div className="App">
+      <header className="header">Littel Lemon</header>
+      <PanelMouseTracker />
+      <PointMouseTracker />
+    </div>
+  )
+
 }
 export default App;
