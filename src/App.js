@@ -2,19 +2,21 @@ import "./App.css";
 
 import * as React from "react";
 
+
 const Row = ({ children, spacing }) => {
   const childStyle = {
     marginLeft: `${spacing}px`,
   };
-  return (
+
+  return(
     <div className="Row">
       {React.Children.map(children, (child, index) => {
-        return React.cloneElement(child, {
-          style: {
-            ...child.props.style,
-            ...(index > 0 ? childStyle : {}),
-          },
-        });
+        child.props.style = {
+          ...child.props.style,
+          ...(index > 0 ? childStyle : {}),
+        };
+        
+        return child;
       })}
     </div>
   );
